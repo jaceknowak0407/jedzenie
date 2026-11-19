@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Jedzenie do pracy</title>
+  <meta name="description" content="Plan jedzenia na zimno do pracy: przepisy, plan tygodnia, zamrażarka i lista zakupów.">
+  <meta name="theme-color" content="#2f7d4f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Jedzenie">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="ikona.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="ikona-180.png">
+  <link rel="stylesheet" href="styl.css?v=3">
+</head>
+<body>
+  <header class="gora">
+    <a href="#start" class="logo">🥪 Jedzenie do pracy</a>
+    <a href="#ustawienia" class="ikona-btn" aria-label="Ustawienia">⚙️</a>
+  </header>
+
+  <main id="app"><p class="pusto">Ładuję…</p></main>
+
+  <nav class="dol" aria-label="Menu">
+    <a href="#start" data-widok="start"><span>☀️</span>Start</a>
+    <a href="#plan" data-widok="plan"><span>📅</span>Plan</a>
+    <a href="#zakupy" data-widok="zakupy"><span>🛒</span>Zakupy</a>
+    <a href="#produkty" data-widok="produkty"><span>🏠</span>Produkty</a>
+    <a href="#przepisy" data-widok="przepisy"><span>📖</span>Przepisy</a>
+    <a href="#notatki" data-widok="notatki"><span>📝</span>Notatki</a>
+  </nav>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-tlo" data-a="zamknij"></div>
+    <div class="modal-okno" role="dialog" aria-modal="true">
+      <button class="modal-x" data-a="zamknij" aria-label="Zamknij">✕</button>
+      <div id="modal-tresc"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>

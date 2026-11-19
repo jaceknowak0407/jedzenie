@@ -1,0 +1,950 @@
+{
+  "wersja": 1,
+  "opis": "Baza przepisów na zimno do pracy. Ilości bez ważenia. bialko_g i kcal = szacunek na 1 porcję.",
+  "spizarnia_opis": "Produkty trwałe, zużywane po trochu. Na liście zakupów pojawiają się jako całe opakowanie i tylko wtedy, gdy nie ma ich w Produktach albo są oznaczone 'kończy się'.",
+  "spizarnia": [
+    "miód", "mąka", "cukier", "masło orzechowe", "kakao", "sos sojowy", "sos słodkie chili", "ocet", "ocet balsamiczny",
+    "tahini", "koncentrat pomidorowy", "musztarda", "majonez", "ketchup", "sriracha", "pesto", "dżem", "pomidory suszone",
+    "oliwa", "olej", "sól", "pieprz", "papryka ostra", "papryka wędzona", "chili", "kumin", "garam masala", "kurkuma",
+    "imbir mielony", "mięta suszona", "koperek suszony", "oregano", "bazylia suszona", "cynamon", "czosnek granulowany",
+    "przyprawa gyros", "proszek do pieczenia", "sezam", "płatki owsiane", "granola", "pestki słonecznika", "orzechy włoskie",
+    "czekolada gorzka", "ryż", "makaron", "panko", "soczewica zielona"
+  ],
+  "zamienniki_opis": "Grupy produktów, które można zamieniać w planie. na_porcje = ile mniej więcej idzie na 1 porcję (do przeliczenia ilości).",
+  "zamienniki": [
+    {"grupa": "Białko", "opcje": [
+      {"nazwa": "pierś z kurczaka", "na_porcje": 0.6, "jednostka": "szt.", "kategoria": "Mięso i ryby", "wskazowka": "Kurczaka dobrze wysmaż: ok. 6 min z każdej strony albo 20–25 min w 200°C."},
+      {"nazwa": "filet z łososia", "na_porcje": 0.6, "jednostka": "szt.", "kategoria": "Mięso i ryby", "wskazowka": "Łososia piecz 12–15 min w 200°C."},
+      {"nazwa": "krewetki", "na_porcje": 0.5, "jednostka": "opak.", "kategoria": "Mrożonki", "wskazowka": "Krewetki smaż 2–3 min, aż będą różowe."},
+      {"nazwa": "mięso mielone z kurczaka", "na_porcje": 0.3, "jednostka": "opak.", "kategoria": "Mięso i ryby", "wskazowka": "Mielone smaż do mocnego przysmażenia, bez grudek."},
+      {"nazwa": "mięso mielone wołowe", "na_porcje": 0.3, "jednostka": "opak.", "kategoria": "Mięso i ryby", "wskazowka": "Mielone smaż do mocnego przysmażenia, bez grudek."},
+      {"nazwa": "mięso mielone wieprzowo-wołowe", "na_porcje": 0.3, "jednostka": "opak.", "kategoria": "Mięso i ryby", "wskazowka": "Mielone smaż do mocnego przysmażenia, bez grudek."},
+      {"nazwa": "kiełbaski wieprzowe", "na_porcje": 0.5, "jednostka": "opak.", "kategoria": "Mięso i ryby", "wskazowka": "Kiełbaski piecz ok. 20 min w 200°C, mają być dobrze wypieczone."},
+      {"nazwa": "łosoś wędzony", "na_porcje": 0.5, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+      {"nazwa": "salami", "na_porcje": 0.33, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+      {"nazwa": "szynka", "na_porcje": 3, "jednostka": "plaster", "kategoria": "Mięso i ryby"},
+      {"nazwa": "chorizo", "na_porcje": 0.25, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+      {"nazwa": "jajka", "na_porcje": 2, "jednostka": "szt.", "kategoria": "Nabiał i jajka", "wskazowka": "Jajka ugotuj na twardo (10 min) albo usmaż ścięte."},
+      {"nazwa": "ciecierzyca", "na_porcje": 0.5, "jednostka": "puszka", "kategoria": "Puszki i słoiki", "wskazowka": "Ciecierzycę odsącz i opłucz."},
+      {"nazwa": "fasola czerwona", "na_porcje": 0.5, "jednostka": "puszka", "kategoria": "Puszki i słoiki", "wskazowka": "Fasolę odsącz i opłucz."}
+    ]},
+    {"grupa": "Węglowodany", "opcje": [
+      {"nazwa": "makaron", "na_porcje": 0.17, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "wskazowka": "Makaron ugotuj al dente i przelej zimną wodą."},
+      {"nazwa": "ryż", "na_porcje": 0.33, "jednostka": "szklanka", "kategoria": "Pieczywo i makarony", "wskazowka": "Ryż ugotuj wcześniej i ostudź."},
+      {"nazwa": "ziemniaki", "na_porcje": 2, "jednostka": "szt.", "kategoria": "Warzywa i owoce", "wskazowka": "Ziemniaki ugotuj w mundurkach (20 min) albo upiecz w ćwiartkach (35 min w 200°C)."},
+      {"nazwa": "tortilla duża", "na_porcje": 1, "jednostka": "szt.", "kategoria": "Pieczywo i makarony", "wskazowka": "Zawiń wszystko w tortillę."}
+    ]},
+    {"grupa": "Sery", "opcje": [
+      {"nazwa": "ser żółty", "na_porcje": 2, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+      {"nazwa": "mozzarella", "na_porcje": 0.33, "jednostka": "kulka", "kategoria": "Nabiał i jajka"},
+      {"nazwa": "ser feta", "na_porcje": 0.33, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+      {"nazwa": "parmezan", "na_porcje": 1, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"}
+    ]},
+    {"grupa": "Warzywa", "opcje": [
+      {"nazwa": "papryka czerwona", "na_porcje": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "cukinia", "na_porcje": 0.33, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "ogórek zielony", "na_porcje": 0.33, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "marchewka", "na_porcje": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "pomidorki koktajlowe", "na_porcje": 4, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "rukola", "na_porcje": 0.5, "jednostka": "garść", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "szpinak", "na_porcje": 0.5, "jednostka": "garść", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "sałata rzymska", "na_porcje": 0.25, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+      {"nazwa": "kukurydza", "na_porcje": 0.25, "jednostka": "puszka", "kategoria": "Puszki i słoiki"}
+    ]}
+  ],
+  "przepisy": [
+    {
+      "id": "muffinki-jajeczne-kurczak",
+      "nazwa": "Muffinki jajeczne z kurczakiem i papryką",
+      "slot": "na-zab",
+      "porcje": 6, "porcja_opis": "2 muffinki",
+      "czas_min": 35, "bialko_g": 18, "kcal": 230,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Wieczorem przełóż do lodówki, rano zabierz.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "jajka", "ilosc": 8, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "pierś z kurczaka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Mięso i ryby", "uwaga": "lub resztka pieczonego kurczaka"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "dymka", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ser żółty", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "serek wiejski", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "papryka ostra", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Kurczaka i paprykę pokrój w drobną kostkę, dymkę posiekaj. Kurczaka podsmaż do zrumienienia.",
+        "Jajka roztrzep z serkiem wiejskim, ostrą papryką, solą i pieprzem.",
+        "Rozłóż kurczaka i warzywa do foremki na 12 muffinek (posmarowanej olejem), zalej jajkami, posyp serem.",
+        "Piecz 20 min w 180°C, aż będą całkowicie ścięte. Ostudź."
+      ],
+      "wskazowka": "Na zimno smakują jak frittata, nie jak jajecznica.",
+      "tagi": {"kuchnia": "domowa", "bialko": ["jajka", "kurczak"]}
+    },
+    {
+      "id": "jajka-faszerowane-sriracha",
+      "nazwa": "Jajka faszerowane z srirachą",
+      "slot": "na-zab",
+      "porcje": 2, "porcja_opis": "2 jajka (4 połówki)",
+      "czas_min": 20, "bialko_g": 13, "kcal": 220,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "jajka", "ilosc": 4, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "majonez", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "musztarda", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sriracha", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "szczypiorek", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "papryka wędzona", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy", "uwaga": "szczypta do posypania"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Jajka gotuj na twardo 10 min, przełóż do zimnej wody i obierz.",
+        "Przekrój wzdłuż, wyjmij żółtka i rozgnieć je z majonezem, musztardą, srirachą i posiekanym szczypiorkiem.",
+        "Nałóż masę z powrotem do białek, posyp wędzoną papryką.",
+        "Złóż połówki w pary i zapakuj ciasno do pojemnika."
+      ],
+      "tagi": {"kuchnia": "domowa", "bialko": ["jajka"]}
+    },
+    {
+      "id": "sloik-serek-wiejski-warzywa",
+      "nazwa": "Słoik: serek wiejski z warzywami i pestkami",
+      "slot": "na-zab",
+      "porcje": 2, "porcja_opis": "1 słoik",
+      "czas_min": 10, "bialko_g": 22, "kcal": 230,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "serek wiejski", "ilosc": 2, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "pomidorki koktajlowe", "ilosc": 10, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ogórek zielony", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "rzodkiewka", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "pestki słonecznika", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Warzywa pokrój w drobną kostkę.",
+        "Do słoika włóż serek, warzywa ułóż NA WIERZCHU (tak puszczą mniej wody), dopraw pieprzem.",
+        "Pestki wsyp osobno do woreczka i dosyp przed jedzeniem. Wymieszaj w słoiku."
+      ],
+      "wskazowka": "Wersja na słodko: serek + łyżka miodu + garść mrożonych owoców.",
+      "tagi": {"kuchnia": "polska", "bialko": ["nabiał"]}
+    },
+    {
+      "id": "roladki-losos-wedzony",
+      "nazwa": "Roladki z tortilli z łososiem wędzonym",
+      "slot": "na-zab",
+      "porcje": 2, "porcja_opis": "1 tortilla pokrojona w ok. 6 roladek",
+      "czas_min": 10, "bialko_g": 18, "kcal": 300,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "tortilla duża", "ilosc": 2, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "łosoś wędzony", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "serek śmietankowy", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "kanapkowy, naturalny"},
+        {"nazwa": "rukola", "ilosc": 1, "jednostka": "garść", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cytryna", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"}
+      ],
+      "kroki": [
+        "Tortille posmaruj serkiem, skrop sokiem z cytryny.",
+        "Ułóż łososia i rukolę, zwiń bardzo ciasno.",
+        "Zawiń każdą w folię — po kilku godzinach w lodówce ładnie się kroi. Rano pokrój na roladki."
+      ],
+      "wskazowka": "Otwarty łosoś wędzony zjedz w ciągu 2 dni.",
+      "tagi": {"kuchnia": "skandynawska", "bialko": ["łosoś"]}
+    },
+    {
+      "id": "rolada-omletowa-szynka-ser",
+      "nazwa": "Rolada omletowa z szynką i serem",
+      "slot": "na-zab",
+      "porcje": 2, "porcja_opis": "pół rolady",
+      "czas_min": 15, "bialko_g": 22, "kcal": 310,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "jajka", "ilosc": 4, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "szynka", "ilosc": 4, "jednostka": "plaster", "kategoria": "Mięso i ryby"},
+        {"nazwa": "ser żółty", "ilosc": 3, "jednostka": "plaster", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "szczypiorek", "ilosc": 0.5, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "masło", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Jajka roztrzep z solą i posiekanym szczypiorkiem.",
+        "Na dużej patelni rozpuść masło, wlej jajka i NIE mieszaj. Smaż na małym ogniu pod przykryciem, aż omlet całkowicie się zetnie.",
+        "Ułóż szynkę i ser, zwiń w roladę, póki ciepła.",
+        "Ostudź i pokrój w grube plastry."
+      ],
+      "wskazowka": "To płaski, ścięty omlet — zupełnie inna konsystencja niż jajecznica.",
+      "tagi": {"kuchnia": "domowa", "bialko": ["jajka"]}
+    },
+    {
+      "id": "skyr-owoce-granola",
+      "nazwa": "Skyr z mrożonymi owocami i granolą",
+      "slot": "na-zab",
+      "porcje": 2, "porcja_opis": "1 kubek skyru",
+      "czas_min": 5, "bialko_g": 20, "kcal": 300,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "skyr naturalny", "ilosc": 2, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "owoce mrożone", "ilosc": 2, "jednostka": "garść", "kategoria": "Mrożonki", "uwaga": "np. maliny, borówki"},
+        {"nazwa": "granola", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "miód", "ilosc": 2, "jednostka": "łyżeczka", "kategoria": "Inne"}
+      ],
+      "kroki": [
+        "Wieczorem wsyp mrożone owoce prosto do pojemnika ze skyrem i polej miodem — do rana się rozmrożą.",
+        "Granolę zapakuj osobno i dosyp przed jedzeniem, żeby była chrupiąca."
+      ],
+      "tagi": {"kuchnia": "skandynawska", "bialko": ["nabiał"]}
+    },
+    {
+      "id": "mini-quesadille-kurczak",
+      "nazwa": "Mini quesadille z kurczakiem i kukurydzą",
+      "slot": "na-zab",
+      "porcje": 4, "porcja_opis": "2 trójkąty",
+      "czas_min": 25, "bialko_g": 20, "kcal": 320,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce.", "przepiec": "Opcjonalnie 3–4 min na suchej patelni — będą chrupiące.",
+      "skladniki": [
+        {"nazwa": "tortilla duża", "ilosc": 4, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "pierś z kurczaka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "ser żółty", "ilosc": 6, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "kukurydza", "ilosc": 0.5, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "chili", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Kurczaka pokrój drobno, obsyp papryką, chili i solą, dobrze wysmaż.",
+        "Na połowę każdej tortilli wyłóż kurczaka, kukurydzę i ser, złóż na pół.",
+        "Opiecz na suchej patelni po 2 min z każdej strony, aż ser się roztopi.",
+        "Każdą przekrój na 2 trójkąty i ostudź."
+      ],
+      "tagi": {"kuchnia": "meksykańska", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "hummus-warzywa-jajko",
+      "nazwa": "Domowy hummus z warzywami i jajkiem",
+      "slot": "na-zab",
+      "porcje": 4, "porcja_opis": "3–4 łyżki hummusu + warzywa + jajko",
+      "czas_min": 15, "bialko_g": 15, "kcal": 280,
+      "trwalosc_dni": 4, "mrozenie": true,
+      "odmrazanie": "Mrozi się sam hummus — przez noc w lodówce. Warzywa i jajko zawsze świeże.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "ciecierzyca", "ilosc": 1, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "tahini", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "cytryna", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "czosnek", "ilosc": 1, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "oliwa", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "kumin", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "marchewka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jajka", "ilosc": 4, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ciecierzycę odsącz (zostaw 3 łyżki zalewy).",
+        "Zblenduj ciecierzycę, tahini, sok z cytryny, czosnek, oliwę, kumin, sól i zalewę na gładko.",
+        "Jajka ugotuj na twardo (10 min).",
+        "Rano: hummus do małego pojemnika, marchewkę i paprykę w słupki, 1 jajko."
+      ],
+      "tagi": {"kuchnia": "bliskowschodnia", "bialko": ["strączki", "jajka"]}
+    },
+    {
+      "id": "wrap-losos-serek-ogorek",
+      "nazwa": "Wrap z pieczonym łososiem, serkiem i ogórkiem",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "1 wrap",
+      "czas_min": 25, "bialko_g": 30, "kcal": 520,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "filet z łososia", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "tortilla duża", "ilosc": 4, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "serek śmietankowy", "ilosc": 1, "jednostka": "opak.", "kategoria": "Nabiał i jajka", "uwaga": "kanapkowy, naturalny"},
+        {"nazwa": "ogórek zielony", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "rukola", "ilosc": 1, "jednostka": "garść", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cytryna", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "koperek suszony", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "chili", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Łososia posyp chili i solą, piecz 15 min w 200°C. Ostudź, zdejmij skórę i rozdrop widelcem.",
+        "Serek wymieszaj z sokiem z cytryny i koperkiem.",
+        "Tortillę posmaruj serkiem, ułóż łososia, paski ogórka i rukolę.",
+        "Zwiń ciasno i zawiń w folię."
+      ],
+      "wskazowka": "Łososia możesz upiec na zapas i zamrozić osobno.",
+      "tagi": {"kuchnia": "skandynawska", "bialko": ["łosoś"]}
+    },
+    {
+      "id": "salatka-makaron-kurczak-pesto",
+      "nazwa": "Sałatka makaronowa z kurczakiem, pesto i suszonymi pomidorami",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 25, "bialko_g": 35, "kcal": 620,
+      "trwalosc_dni": 3, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 0.5, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "świderki"},
+        {"nazwa": "pierś z kurczaka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "pesto", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "pomidory suszone", "ilosc": 6, "jednostka": "szt.", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "mozzarella", "ilosc": 1, "jednostka": "kulka", "kategoria": "Nabiał i jajka", "uwaga": "lub mini-mozzarelle"},
+        {"nazwa": "rukola", "ilosc": 1, "jednostka": "garść", "kategoria": "Warzywa i owoce", "uwaga": "lub szpinak"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj makaron al dente i przelej zimną wodą.",
+        "Kurczaka pokrój w kostkę, obsyp papryką i solą, dobrze wysmaż.",
+        "Wymieszaj makaron, kurczaka, pesto, pokrojone pomidory i mozzarellę.",
+        "Rozłóż do pojemników, rukolę na wierzch."
+      ],
+      "tagi": {"kuchnia": "włoska", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "burrito-wolowina-fasola",
+      "nazwa": "Burrito z mieloną wołowiną i fasolą",
+      "slot": "sniadanie",
+      "porcje": 8, "porcja_opis": "1 burrito",
+      "czas_min": 45, "bialko_g": 32, "kcal": 580,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Wieczorem wyjmij z zamrażarki.", "przepiec": "Opcjonalnie 15 min w 180°C w folii — tortilla będzie chrupiąca. Rano zabierz.",
+      "sprawdzony": true,
+      "skladniki": [
+        {"nazwa": "mięso mielone wołowe", "ilosc": 2, "jednostka": "opak.", "kategoria": "Mięso i ryby", "uwaga": "lub pół na pół z wieprzowym"},
+        {"nazwa": "fasola czerwona", "ilosc": 1, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "kukurydza", "ilosc": 1, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "cebula", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "czosnek", "ilosc": 2, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "koncentrat pomidorowy", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "kumin", "ilosc": 2, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "papryka ostra", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ryż", "ilosc": 0.5, "jednostka": "szklanka", "kategoria": "Pieczywo i makarony", "uwaga": "suchy = ok. 1 szklanka ugotowanego"},
+        {"nazwa": "tortilla duża", "ilosc": 8, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "ser żółty", "ilosc": 8, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty, najlepiej cheddar"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj ryż.",
+        "Zeszklij posiekaną cebulę i czosnek, dodaj mięso i smaż, aż będzie mocno przysmażone i bez grudek.",
+        "Dodaj kumin, paprykę, koncentrat, odsączoną fasolę i kukurydzę. Duś 10 min, wymieszaj z ryżem i ostudź.",
+        "Nałóż farsz na tortillę, posyp serem, zwiń szczelnie (boki do środka) i zawiń każde burrito w folię."
+      ],
+      "tagi": {"kuchnia": "meksykańska", "bialko": ["mielone", "strączki"]}
+    },
+    {
+      "id": "makaron-pomidorowy-salami-papryka",
+      "nazwa": "Makaron w sosie pomidorowym z salami i papryką",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 25, "bialko_g": 24, "kcal": 640,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce, jeść na zimno.", "przepiec": null,
+      "sprawdzony": true,
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 0.5, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "penne"},
+        {"nazwa": "passata pomidorowa", "ilosc": 1, "jednostka": "opak.", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "salami", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby", "uwaga": "najlepiej pikantne"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cebula", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "czosnek", "ilosc": 2, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "oregano", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "chili", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy", "uwaga": "szczypta"},
+        {"nazwa": "ser żółty", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty, lub parmezan"},
+        {"nazwa": "oliwa", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj makaron al dente.",
+        "Na oliwie podsmaż cebulę, czosnek, paprykę i pokrojone salami (salami puści aromatyczny tłuszcz).",
+        "Wlej passatę, dodaj oregano i chili, gotuj 10 min.",
+        "Wymieszaj z makaronem, posyp serem, ostudź i rozłóż do pojemników."
+      ],
+      "tagi": {"kuchnia": "włoska", "bialko": ["wieprzowina"]}
+    },
+    {
+      "id": "kielbaski-jajko-ziemniaki",
+      "nazwa": "Pieczone kiełbaski z ziemniakami i jajkiem sadzonym",
+      "slot": "sniadanie",
+      "porcje": 2, "porcja_opis": "1 pojemnik",
+      "czas_min": 40, "bialko_g": 30, "kcal": 650,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "sprawdzony": true,
+      "skladniki": [
+        {"nazwa": "kiełbaski wieprzowe", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby", "uwaga": "surowe, typu grillowe"},
+        {"nazwa": "ziemniaki", "ilosc": 4, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jajka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "olej", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ketchup", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy", "uwaga": "lub sriracha"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ziemniaki pokrój w ćwiartki, wymieszaj z olejem, papryką i solą. Piecz 35 min w 200°C.",
+        "Po 15 min dołóż kiełbaski na tę samą blachę — mają być dobrze wypieczone.",
+        "Usmaż jajka sadzone z obu stron, z ściętym żółtkiem (lepiej znoszą transport).",
+        "Ostudź i zapakuj, ketchup w małym pojemniczku."
+      ],
+      "tagi": {"kuchnia": "polska", "bialko": ["wieprzowina", "jajka"]}
+    },
+    {
+      "id": "wrap-cezar-kurczak",
+      "nazwa": "Wrap cezar z pikantnym kurczakiem",
+      "slot": "sniadanie",
+      "porcje": 2, "porcja_opis": "1 wrap",
+      "czas_min": 25, "bialko_g": 38, "kcal": 560,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "pierś z kurczaka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Mięso i ryby", "uwaga": "duża"},
+        {"nazwa": "tortilla duża", "ilosc": 2, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "sałata rzymska", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "parmezan", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "jogurt grecki", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "majonez", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "musztarda", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek", "ilosc": 1, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cytryna", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "papryka ostra", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Kurczaka przekrój na 2 cienkie płaty, natrzyj papryką i solą. Smaż po 5–6 min z każdej strony do pełnego wysmażenia, pokrój w paski.",
+        "Sos: jogurt + majonez + musztarda + przeciśnięty czosnek + sok z cytryny + pieprz.",
+        "Tortillę posmaruj sosem, ułóż suchą sałatę, kurczaka i parmezan.",
+        "Zwiń ciasno i zawiń w folię."
+      ],
+      "wskazowka": "Sałata dłużej chrupie, jeśli jest dobrze osuszona.",
+      "tagi": {"kuchnia": "amerykańska", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "zapiekanka-makaron-bolognese",
+      "nazwa": "Zapiekanka makaronowa bolognese z mozzarellą",
+      "slot": "sniadanie",
+      "porcje": 6, "porcja_opis": "1 kawałek",
+      "czas_min": 50, "bialko_g": 33, "kcal": 650,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce. Na zimno smakuje jak lasagne.", "przepiec": "Opcjonalnie 15 min w 180°C pod folią.",
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 1, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "penne"},
+        {"nazwa": "mięso mielone wieprzowo-wołowe", "ilosc": 2, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "pomidory krojone", "ilosc": 2, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "koncentrat pomidorowy", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "cebula", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "marchewka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "czosnek", "ilosc": 3, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "oregano", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "bazylia suszona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "mozzarella", "ilosc": 2, "jednostka": "kulka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "ser żółty", "ilosc": 6, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj makaron 2 min krócej niż na opakowaniu.",
+        "Podsmaż cebulę, czosnek i startą marchewkę. Dodaj mięso i smaż do mocnego przysmażenia, bez grudek.",
+        "Dodaj pomidory, koncentrat, zioła, sól i pieprz — duś 15 min.",
+        "Wymieszaj z makaronem, przełóż do naczynia, przykryj mozzarellą i serem. Piecz 20 min w 200°C.",
+        "Ostudź, pokrój na 6 kawałków. Co nie pójdzie na najbliższe dni — do zamrażarki."
+      ],
+      "tagi": {"kuchnia": "włoska", "bialko": ["mielone"]}
+    },
+    {
+      "id": "miska-losos-teriyaki",
+      "nazwa": "Miska ryżowa z łososiem teriyaki i edamame",
+      "slot": "sniadanie",
+      "porcje": 2, "porcja_opis": "1 miska",
+      "czas_min": 30, "bialko_g": 36, "kcal": 640,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "filet z łososia", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "ryż", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Pieczywo i makarony", "uwaga": "jaśminowy lub do sushi"},
+        {"nazwa": "edamame mrożone", "ilosc": 2, "jednostka": "garść", "kategoria": "Mrożonki", "uwaga": "łuskane"},
+        {"nazwa": "ogórek zielony", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "marchewka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sos sojowy", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "miód", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "imbir mielony", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sezam", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "majonez", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sriracha", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj ryż.",
+        "Łososia bez skóry pokrój w kostkę, smaż 6–8 min. Pod koniec wlej sos sojowy z miodem i imbirem — niech zgęstnieje w glazurę.",
+        "Edamame gotuj 4 min, ogórka i marchewkę pokrój w słupki.",
+        "Ułóż w pojemnikach: ryż, łosoś, warzywa, edamame, posyp sezamem. Majonez z srirachą w małym pojemniczku."
+      ],
+      "tagi": {"kuchnia": "japońska", "bialko": ["łosoś"]}
+    },
+    {
+      "id": "salatka-makaronowa-losos-groszek",
+      "nazwa": "Sałatka makaronowa z łososiem, groszkiem i koperkiem",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 25, "bialko_g": 30, "kcal": 580,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 0.5, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "kokardki lub muszelki"},
+        {"nazwa": "filet z łososia", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "groszek mrożony", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Mrożonki"},
+        {"nazwa": "ogórki kiszone", "ilosc": 2, "jednostka": "szt.", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "jogurt grecki", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "majonez", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "koperek", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cytryna", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Łososia posól, piecz 15 min w 200°C, ostudź i rozdrop.",
+        "Ugotuj makaron, pod koniec wrzuć groszek na 2 min. Przelej zimną wodą.",
+        "Sos: jogurt + majonez + sok z cytryny + posiekany koperek + sól i pieprz.",
+        "Wymieszaj makaron, groszek, pokrojone ogórki i sos, na koniec delikatnie łososia."
+      ],
+      "tagi": {"kuchnia": "skandynawska", "bialko": ["łosoś"]}
+    },
+    {
+      "id": "tortilla-espanola-chorizo",
+      "nazwa": "Hiszpański omlet ziemniaczany z chorizo",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "ćwiartka",
+      "czas_min": 45, "bialko_g": 22, "kcal": 450,
+      "trwalosc_dni": 3, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "ziemniaki", "ilosc": 5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cebula", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jajka", "ilosc": 7, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "chorizo", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Mięso i ryby", "uwaga": "lub ostra kiełbasa"},
+        {"nazwa": "oliwa", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ziemniaki pokrój w cienkie plasterki, cebulę w piórka. Smaż na oliwie pod przykryciem 15–20 min do miękkości.",
+        "Dodaj chorizo w kostce, podsmaż 2 min.",
+        "Jajka roztrzep z solą i papryką, wmieszaj ziemniaki, wlej z powrotem na patelnię.",
+        "Smaż na małym ogniu 10 min, potem dopiecz 10 min w 180°C (lub przewróć na talerzu), aż środek będzie całkiem ścięty.",
+        "Ostudź i pokrój na ćwiartki."
+      ],
+      "tagi": {"kuchnia": "hiszpańska", "bialko": ["jajka"]}
+    },
+    {
+      "id": "kurczak-tikka-ryz",
+      "nazwa": "Kurczak tikka z ryżem i sosem jogurtowym",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 40, "bialko_g": 38, "kcal": 580,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Kurczak z ryżem — na noc w lodówce. Sos jogurtowy rób świeży.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "pierś z kurczaka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby", "uwaga": "duże"},
+        {"nazwa": "jogurt naturalny", "ilosc": 1, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "garam masala", "ilosc": 2, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy", "uwaga": "lub curry"},
+        {"nazwa": "kurkuma", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "papryka ostra", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek", "ilosc": 2, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cytryna", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ryż", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Pieczywo i makarony", "uwaga": "basmati"},
+        {"nazwa": "ogórek zielony", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "mięta suszona", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Kurczaka pokrój w kostkę. Wymieszaj z połową jogurtu, przyprawami, czosnkiem, sokiem z cytryny i solą (najlepiej od rana lub dzień wcześniej).",
+        "Rozłóż na blasze i piecz 20–25 min w 220°C, aż brzegi się przypieką.",
+        "Ugotuj ryż.",
+        "Sos: reszta jogurtu + starty ogórek + mięta + sól. Pakuj osobno."
+      ],
+      "tagi": {"kuchnia": "indyjska", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "pizzarolle-salami",
+      "nazwa": "Pizzarolle (ślimaki pizzowe) z salami i szynką",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "3 ślimaki",
+      "czas_min": 35, "bialko_g": 24, "kcal": 560,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce.", "przepiec": "Opcjonalnie 5–8 min w 200°C — będą chrupiące.",
+      "skladniki": [
+        {"nazwa": "ciasto do pizzy", "ilosc": 1, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "gotowe, z lodówki"},
+        {"nazwa": "passata pomidorowa", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "salami", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "szynka", "ilosc": 4, "jednostka": "plaster", "kategoria": "Mięso i ryby"},
+        {"nazwa": "ser żółty", "ilosc": 8, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "oregano", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Rozwiń ciasto, posmaruj cienko passatą, posyp oregano.",
+        "Ułóż salami, szynkę, drobno pokrojoną paprykę i ser.",
+        "Zwiń wzdłuż dłuższego boku, pokrój na 12 ślimaków.",
+        "Ułóż na blasze z papierem, piecz 18–20 min w 200°C. Ostudź."
+      ],
+      "tagi": {"kuchnia": "włoska", "bialko": ["wieprzowina"]}
+    },
+    {
+      "id": "salatka-gyros",
+      "nazwa": "Sałatka gyros warstwowa",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "1 pojemnik",
+      "czas_min": 35, "bialko_g": 32, "kcal": 480,
+      "trwalosc_dni": 3, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "pierś z kurczaka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "przyprawa gyros", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "kapusta pekińska", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ogórki kiszone", "ilosc": 3, "jednostka": "szt.", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "kukurydza", "ilosc": 1, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cebula czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jogurt grecki", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "majonez", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ketchup", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek", "ilosc": 1, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "olej", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Kurczaka pokrój w paski, obsyp przyprawą gyros, dobrze wysmaż na oleju. Ostudź.",
+        "Sos: jogurt + majonez + przeciśnięty czosnek.",
+        "W pojemnikach układaj warstwami: kurczak, ketchup, cebula, ogórki, kukurydza, papryka, kapusta, sos na wierzch.",
+        "Najlepsza po nocy w lodówce — smaki się przegryzą."
+      ],
+      "tagi": {"kuchnia": "grecka", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "frittata-z-makaronem",
+      "nazwa": "Frittata z makaronem, szynką i serem",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "ćwiartka",
+      "czas_min": 30, "bialko_g": 24, "kcal": 520,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 0.25, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "spaghetti — albo resztki ugotowanego"},
+        {"nazwa": "jajka", "ilosc": 6, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "szynka", "ilosc": 6, "jednostka": "plaster", "kategoria": "Mięso i ryby", "uwaga": "lub salami"},
+        {"nazwa": "ser żółty", "ilosc": 6, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "parmezan", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "opcjonalnie"},
+        {"nazwa": "mleko", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "masło", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj makaron (albo użyj resztek) i ostudź.",
+        "Jajka roztrzep z mlekiem, serami i pieprzem. Wymieszaj z makaronem i pokrojoną szynką.",
+        "Wylej na patelnię z masłem (taką, co wejdzie do piekarnika), smaż 5 min na małym ogniu.",
+        "Dopiecz 12–15 min w 190°C, aż będzie całkiem ścięta i złota. Ostudź, pokrój."
+      ],
+      "wskazowka": "Idealna na niedzielę z resztek makaronu.",
+      "tagi": {"kuchnia": "włoska", "bialko": ["jajka"]}
+    },
+    {
+      "id": "makaron-azjatycki-kurczak-sezam",
+      "nazwa": "Makaron azjatycki na zimno z kurczakiem i sosem orzechowym",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 25, "bialko_g": 34, "kcal": 620,
+      "trwalosc_dni": 3, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "makaron", "ilosc": 0.5, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "spaghetti, udon lub ramen"},
+        {"nazwa": "pierś z kurczaka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "masło orzechowe", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "sos sojowy", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sriracha", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "miód", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "ocet", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy", "uwaga": "ryżowy lub jabłkowy"},
+        {"nazwa": "czosnek", "ilosc": 1, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "marchewka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ogórek zielony", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "dymka", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sezam", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"}
+      ],
+      "kroki": [
+        "Ugotuj makaron, przelej zimną wodą.",
+        "Kurczaka pokrój w paski, skrop 1 łyżką sosu sojowego i dobrze wysmaż.",
+        "Sos: masło orzechowe + reszta sosu sojowego + sriracha + miód + ocet + czosnek + 2–3 łyżki ciepłej wody.",
+        "Warzywa pokrój w cienkie paski. Wymieszaj wszystko z sosem, posyp sezamem i dymką."
+      ],
+      "tagi": {"kuchnia": "azjatycka", "bialko": ["kurczak"]}
+    },
+    {
+      "id": "ryz-smazony-kurczak-jajko",
+      "nazwa": "Ryż smażony z kurczakiem, omletem i groszkiem",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 25, "bialko_g": 32, "kcal": 580,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "ryż", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Pieczywo i makarony", "uwaga": "najlepszy ugotowany dzień wcześniej"},
+        {"nazwa": "pierś z kurczaka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "jajka", "ilosc": 3, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "groszek mrożony", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Mrożonki"},
+        {"nazwa": "marchewka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "dymka", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "czosnek", "ilosc": 2, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sos sojowy", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "olej", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sriracha", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ugotuj ryż i ostudź (albo użyj wczorajszego).",
+        "Z jajek usmaż cienki omlet, zwiń i pokrój w paski.",
+        "Na mocno rozgrzanym oleju wysmaż kurczaka w kostce, dodaj czosnek, startą marchewkę i groszek.",
+        "Dorzuć ryż, smaż 5 min, wlej sos sojowy i srirachę. Na koniec paski omletu i dymka."
+      ],
+      "tagi": {"kuchnia": "chińska", "bialko": ["kurczak", "jajka"]}
+    },
+    {
+      "id": "wrap-mielony-kurczak-tajski",
+      "nazwa": "Wrap z mielonym kurczakiem po tajsku",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 wrap",
+      "czas_min": 20, "bialko_g": 32, "kcal": 510,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "mięso mielone z kurczaka", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "tortilla duża", "ilosc": 3, "jednostka": "szt.", "kategoria": "Pieczywo i makarony"},
+        {"nazwa": "sos słodkie chili", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sos sojowy", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek", "ilosc": 2, "jednostka": "ząbek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "dymka", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "limonka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce", "uwaga": "lub cytryna"},
+        {"nazwa": "marchewka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "ogórek zielony", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sałata lodowa", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "majonez", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sriracha", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "olej", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Na rozgrzanym oleju smaż mielonego kurczaka z czosnkiem, rozbijając grudki, aż będzie przysmażony (ok. 8 min).",
+        "Dodaj sos sojowy i 2 łyżki słodkiego chili, smaż jeszcze 2 min. Zdejmij z ognia, skrop limonką, dodaj dymkę. Ostudź.",
+        "Majonez wymieszaj z srirachą i resztą słodkiego chili.",
+        "Tortillę posmaruj sosem, ułóż sałatę, startą marchewkę, paski ogórka i mięso. Zwiń ciasno w folię."
+      ],
+      "wskazowka": "Sam farsz mięsny można zamrozić — wtedy rano tylko zawijasz.",
+      "tagi": {"kuchnia": "tajska", "bialko": ["mielone", "kurczak"]}
+    },
+    {
+      "id": "empanadas-mielone",
+      "nazwa": "Empanadas z mielonym, papryką i serem",
+      "slot": "sniadanie",
+      "porcje": 4, "porcja_opis": "2 pierożki",
+      "czas_min": 50, "bialko_g": 26, "kcal": 610,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Na noc w lodówce.", "przepiec": "Opcjonalnie 8–10 min w 190°C — ciasto znowu będzie kruche.",
+      "skladniki": [
+        {"nazwa": "ciasto francuskie", "ilosc": 2, "jednostka": "opak.", "kategoria": "Pieczywo i makarony", "uwaga": "z lodówki, w rolce"},
+        {"nazwa": "mięso mielone wieprzowo-wołowe", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "cebula", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "papryka czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "koncentrat pomidorowy", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "kumin", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "chili", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ser żółty", "ilosc": 6, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "starty"},
+        {"nazwa": "jajka", "ilosc": 1, "jednostka": "szt.", "kategoria": "Nabiał i jajka", "uwaga": "do posmarowania"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Podsmaż cebulę i paprykę w kostce, dodaj mięso i smaż do mocnego przysmażenia, bez grudek.",
+        "Dodaj koncentrat i przyprawy, smaż 3 min. Ostudź i wymieszaj z serem.",
+        "Każdy płat ciasta pokrój na 4 prostokąty. Na połowę każdego nałóż farsz, złóż i dociśnij brzegi widelcem.",
+        "Posmaruj roztrzepanym jajkiem, piecz 20–22 min w 200°C na złoto. Ostudź."
+      ],
+      "tagi": {"kuchnia": "latynoamerykańska", "bialko": ["mielone"]}
+    },
+    {
+      "id": "salatka-soczewica-feta",
+      "nazwa": "Sałatka z soczewicą, pieczonymi warzywami i fetą",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 35, "bialko_g": 24, "kcal": 490,
+      "trwalosc_dni": 4, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "soczewica zielona", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Puszki i słoiki", "uwaga": "sucha"},
+        {"nazwa": "ser feta", "ilosc": 1, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "papryka czerwona", "ilosc": 2, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cukinia", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "cebula czerwona", "ilosc": 1, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jajka", "ilosc": 3, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "oliwa", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ocet balsamiczny", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "miód", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Inne"},
+        {"nazwa": "oregano", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Soczewicę gotuj 20 min w osolonej wodzie (ma zostać lekko jędrna), odcedź.",
+        "Paprykę, cukinię i cebulę pokrój w kostkę, wymieszaj z 2 łyżkami oliwy i oregano, piecz 25 min w 200°C.",
+        "Jajka ugotuj na twardo.",
+        "Wymieszaj soczewicę z warzywami i dressingiem (oliwa + balsamico + miód + sól). Na wierzch feta i ćwiartki jajka."
+      ],
+      "tagi": {"kuchnia": "śródziemnomorska", "bialko": ["strączki", "nabiał"]}
+    },
+    {
+      "id": "salatka-ziemniaczana-losos-jajko",
+      "nazwa": "Sałatka ziemniaczana z pieczonym łososiem i jajkiem",
+      "slot": "sniadanie",
+      "porcje": 3, "porcja_opis": "1 pojemnik",
+      "czas_min": 40, "bialko_g": 32, "kcal": 540,
+      "trwalosc_dni": 2, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "ziemniaki", "ilosc": 6, "jednostka": "szt.", "kategoria": "Warzywa i owoce", "uwaga": "małe"},
+        {"nazwa": "filet z łososia", "ilosc": 2, "jednostka": "szt.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "jajka", "ilosc": 3, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "ogórki kiszone", "ilosc": 2, "jednostka": "szt.", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "cebula czerwona", "ilosc": 0.5, "jednostka": "szt.", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "jogurt grecki", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "majonez", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "musztarda", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "koperek", "ilosc": 1, "jednostka": "pęczek", "kategoria": "Warzywa i owoce"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "pieprz", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Ziemniaki ugotuj w mundurkach (ok. 20 min), ostudź, obierz i pokrój w kostkę.",
+        "Łososia posól i piecz 15 min w 200°C, rozdrop na duże kawałki. Jajka ugotuj na twardo.",
+        "Sos: jogurt + majonez + musztarda + koperek + sól i pieprz.",
+        "Wymieszaj ziemniaki, ogórki, cebulę i sos; łososia i jajko połóż na wierzchu."
+      ],
+      "tagi": {"kuchnia": "polska", "bialko": ["łosoś", "jajka"]}
+    },
+    {
+      "id": "ciecierzyca-pikantna-ser",
+      "nazwa": "Chrupiąca pikantna ciecierzyca + ser w kostkach",
+      "slot": "przekaska",
+      "porcje": 4, "porcja_opis": "garść ciecierzycy + 3–4 kostki sera",
+      "czas_min": 40, "bialko_g": 14, "kcal": 280,
+      "trwalosc_dni": 5, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "ciecierzyca", "ilosc": 2, "jednostka": "puszka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "oliwa", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "papryka wędzona", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "chili", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek granulowany", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "ser żółty", "ilosc": 1, "jednostka": "kawałek", "kategoria": "Nabiał i jajka", "uwaga": "w kawałku, do pokrojenia w kostkę"}
+      ],
+      "kroki": [
+        "Ciecierzycę odsącz i bardzo dokładnie osusz ręcznikiem.",
+        "Wymieszaj z oliwą i przyprawami.",
+        "Piecz 30–35 min w 200°C, w połowie przemieszaj.",
+        "Ostudź i przesyp do słoika. Ser pokrój w kostkę i pakuj osobno."
+      ],
+      "wskazowka": "Słoik może stać w temperaturze pokojowej.",
+      "tagi": {"kuchnia": "bliskowschodnia", "bialko": ["strączki", "nabiał"]}
+    },
+    {
+      "id": "batony-owsiane-twarog",
+      "nazwa": "Batony owsiane z twarogiem i masłem orzechowym",
+      "slot": "przekaska",
+      "porcje": 8, "porcja_opis": "1 baton",
+      "czas_min": 40, "bialko_g": 11, "kcal": 250,
+      "trwalosc_dni": 5, "mrozenie": true,
+      "odmrazanie": "Wyjmij wieczorem — rozmrożą się w temperaturze pokojowej.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "płatki owsiane", "ilosc": 2, "jednostka": "szklanka", "kategoria": "Inne"},
+        {"nazwa": "twaróg półtłusty", "ilosc": 1, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "jajka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "banany", "ilosc": 2, "jednostka": "szt.", "kategoria": "Warzywa i owoce", "uwaga": "dojrzałe"},
+        {"nazwa": "masło orzechowe", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "miód", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "czekolada gorzka", "ilosc": 0.5, "jednostka": "tabliczka", "kategoria": "Inne"},
+        {"nazwa": "cynamon", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"}
+      ],
+      "kroki": [
+        "Banany rozgnieć widelcem, wymieszaj z twarogiem, jajkami, masłem orzechowym, miodem i cynamonem (mikser).",
+        "Wsyp płatki i posiekaną czekoladę, wymieszaj.",
+        "Przełóż do formy wyłożonej papierem, wyrównaj. Piecz 25 min w 180°C.",
+        "Całkowicie ostudź i dopiero wtedy pokrój na 8 batonów."
+      ],
+      "tagi": {"kuchnia": "domowa", "bialko": ["nabiał"]}
+    },
+    {
+      "id": "kulki-maslo-orzechowe",
+      "nazwa": "Kulki mocy z masła orzechowego i płatków",
+      "slot": "przekaska",
+      "porcje": 6, "porcja_opis": "2–3 kulki",
+      "czas_min": 15, "bialko_g": 8, "kcal": 240,
+      "trwalosc_dni": 7, "mrozenie": true,
+      "odmrazanie": "Można jeść prosto z zamrażarki — rozmrażają się w 15 min.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "płatki owsiane", "ilosc": 1, "jednostka": "szklanka", "kategoria": "Inne"},
+        {"nazwa": "masło orzechowe", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"},
+        {"nazwa": "miód", "ilosc": 3, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "kakao", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "orzechy włoskie", "ilosc": 1, "jednostka": "garść", "kategoria": "Inne"},
+        {"nazwa": "czekolada gorzka", "ilosc": 0.25, "jednostka": "tabliczka", "kategoria": "Inne"}
+      ],
+      "kroki": [
+        "Orzechy i czekoladę posiekaj drobno.",
+        "Wymieszaj wszystko w misce na gęstą masę (za sucha — łyżka masła orzechowego więcej).",
+        "Wilgotnymi dłońmi formuj kulki wielkości orzecha włoskiego.",
+        "Schłódź 30 min, przełóż do pudełka."
+      ],
+      "tagi": {"kuchnia": "domowa", "bialko": ["nabiał"]}
+    },
+    {
+      "id": "zestaw-kabanosy-ser-jablko",
+      "nazwa": "Zestaw awaryjny: kabanosy, ser i jabłko",
+      "slot": "przekaska",
+      "porcje": 2, "porcja_opis": "pół opakowania kabanosów + ser + jabłko",
+      "czas_min": 2, "bialko_g": 18, "kcal": 330,
+      "trwalosc_dni": 5, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "kabanosy", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mięso i ryby"},
+        {"nazwa": "ser żółty", "ilosc": 1, "jednostka": "kawałek", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "jabłka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Warzywa i owoce"}
+      ],
+      "kroki": [
+        "Wrzuć do torby. Zero gotowania — na dni, kiedy nie ma czasu."
+      ],
+      "tagi": {"kuchnia": "polska", "bialko": ["wieprzowina", "nabiał"]}
+    },
+    {
+      "id": "edamame-chili",
+      "nazwa": "Edamame z solą i chili",
+      "slot": "przekaska",
+      "porcje": 2, "porcja_opis": "1 miseczka",
+      "czas_min": 10, "bialko_g": 12, "kcal": 190,
+      "trwalosc_dni": 3, "mrozenie": false, "odmrazanie": null, "przepiec": null,
+      "skladniki": [
+        {"nazwa": "edamame mrożone w strączkach", "ilosc": 1, "jednostka": "opak.", "kategoria": "Mrożonki"},
+        {"nazwa": "sól", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy", "uwaga": "najlepiej gruba"},
+        {"nazwa": "chili", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy", "uwaga": "płatki"},
+        {"nazwa": "sos sojowy", "ilosc": 1, "jednostka": "łyżeczka", "kategoria": "Przyprawy i sosy"},
+        {"nazwa": "czosnek granulowany", "ilosc": null, "jednostka": "", "kategoria": "Przyprawy i sosy", "uwaga": "szczypta"}
+      ],
+      "kroki": [
+        "Edamame gotuj 5 min w osolonej wodzie, odcedź.",
+        "Wymieszaj z sosem sojowym, chili, czosnkiem i grubą solą.",
+        "Jesz, wyciskając ziarna ze strączków zębami."
+      ],
+      "tagi": {"kuchnia": "japońska", "bialko": ["strączki"]}
+    },
+    {
+      "id": "placuszki-serek-wiejski",
+      "nazwa": "Placuszki z serka wiejskiego z dżemem",
+      "slot": "przekaska",
+      "porcje": 3, "porcja_opis": "4 placuszki",
+      "czas_min": 25, "bialko_g": 17, "kcal": 300,
+      "trwalosc_dni": 3, "mrozenie": true,
+      "odmrazanie": "Rano prosto z zamrażarki — do przerwy się rozmrożą.", "przepiec": null,
+      "skladniki": [
+        {"nazwa": "serek wiejski", "ilosc": 1, "jednostka": "opak.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "jajka", "ilosc": 2, "jednostka": "szt.", "kategoria": "Nabiał i jajka"},
+        {"nazwa": "mąka", "ilosc": 4, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "cukier", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Inne"},
+        {"nazwa": "proszek do pieczenia", "ilosc": 0.5, "jednostka": "łyżeczka", "kategoria": "Inne"},
+        {"nazwa": "masło", "ilosc": 1, "jednostka": "łyżka", "kategoria": "Nabiał i jajka", "uwaga": "do smażenia"},
+        {"nazwa": "dżem", "ilosc": 2, "jednostka": "łyżka", "kategoria": "Puszki i słoiki"}
+      ],
+      "kroki": [
+        "Wymieszaj serek, jajka, mąkę, cukier i proszek do pieczenia.",
+        "Smaż małe placuszki na maśle, po 2–3 min z każdej strony, na średnim ogniu.",
+        "Ostudź. Dżem pakuj w małym pojemniczku."
+      ],
+      "tagi": {"kuchnia": "polska", "bialko": ["nabiał", "jajka"]}
+    }
+  ]
+}
