@@ -1,8 +1,8 @@
 // Service worker: pozwala działać offline i instalować aplikację.
 // Strategia "najpierw sieć": gdy jest internet, zawsze bierze świeże pliki; bez internetu — kopię z pamięci.
 // Po zmianie plików aplikacji podbij WERSJA.
-const WERSJA = 'jedzenie-v3';
-const PLIKI = ['./', 'index.html', 'styl.css?v=3', 'app.js?v=3', 'przepisy.json', 'manifest.json', 'ikona.svg', 'ikona-180.png', 'ikona-192.png', 'ikona-512.png'];
+const WERSJA = 'jedzenie-v4';
+const PLIKI = ['./', 'index.html', 'styl.css?v=4', 'app.js?v=4', 'przepisy.json', 'manifest.json', 'ikona.svg', 'ikona-180.png', 'ikona-192.png', 'ikona-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(WERSJA).then(c => c.addAll(PLIKI)).then(() => self.skipWaiting()));

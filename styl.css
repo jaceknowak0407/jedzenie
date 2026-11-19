@@ -186,6 +186,22 @@ label.btn { display: inline-flex; align-items: center; }
 .skladniki .ile .maly-btn { margin-left: 6px; }
 @media (prefers-color-scheme: dark) { .btn.pom { background: #3a2a15; color: #f0b36b; } }
 
+/* Przycisk ⋯ przy daniu i menu */
+.kropki {
+  flex: none; align-self: flex-start; width: 40px; height: 40px; margin: -4px -6px 0 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--szary);
+  font-size: 22px; line-height: 1; cursor: pointer;
+}
+.kropki:active { background: var(--linia); }
+.menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.menu-btn {
+  width: 100%; text-align: left; padding: 13px 14px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--linia); background: var(--karta); font-size: 16px;
+}
+.menu-btn:active { transform: scale(.98); }
+.danie.pominiety { opacity: .55; }
+.nadpisanie { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+
 .toast {
   position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%);
   background: var(--tekst); color: var(--tlo); padding: 10px 16px; border-radius: 12px; font-size: 14px; z-index: 30;

@@ -128,8 +128,13 @@ function domyslnyStan() {
   };
 }
 function upewnijPlan(p) {
-  for (const k of ['zakupy', 'wlasne']) { p[k] = p[k] || {}; p[k].pn = p[k].pn || (k === 'wlasne' ? [] : {}); p[k].sr = p[k].sr || (k === 'wlasne' ? [] : {}); }
-  for (const k of ['wyjete', 'doZamrazarki', 'zamiany', 'ugotowane']) p[k] = p[k] || {};
+  // Lista zakupów jest wspólna na cały tydzień (stare plany miały osobno pn i sr)
+  p.zakupy = p.zakupy || {};
+  p.wlasne = p.wlasne || {};
+  if (!p.zakupy.all) p.zakupy.all = { ...(p.zakupy.pn || {}), ...(p.zakupy.sr || {}) };
+  if (!p.wlasne.all) p.wlasne.all = [...(p.wlasne.pn || []), ...(p.wlasne.sr || [])];
+  // dni = zmiany tylko na jeden dzień: { 'cz|sniadanie': { typ: 'wlasne' | 'pomin', ... } }
+  for (const k of ['wyjete', 'doZamrazarki', 'zamiany', 'ugotowane', 'dni']) p[k] = p[k] || {};
   return p;
 }
 function migruj(s) {
@@ -158,7 +163,7 @@ function zapisz() {
 }
 
 let S = wczytajStan();
-let ui = { tydzien: 0, zakupySesja: null, filtrSlot: 'wszystkie', szukaj: '', produktySeg: 'dom', modalCtx: null };
+let ui = { tydzien: 0, zakupyTydzien: null, zakupyFiltr: 'all', filtrSlot: 'wszystkie', szukaj: '', produktySeg: 'dom', modalCtx: null };
 
 function zaladujDane(d) {
   PRZEPISY = d.przepisy;
@@ -185,19 +190,23 @@ function dodajProdukt(nazwa) {
 // ---------- Oceny, sloty ----------
 const ocena = id => (S.oceny[id] && S.oceny[id].ocena) || 0;
 const aktywneSloty = () => SLOTY.filter(s => !(s.id === 'na-zab' && S.ustawienia.post) && !(s.id === 'przekaska' && !S.ustawienia.przekaski));
-const potrzebnePorcje = sk => SESJE[sk].dni.length * S.ustawienia.osoby;
+// Dni sesji, które nie mają zmiany „tylko na ten dzień” (własne / pominięte)
+const dniAktywne = (plan, sk, slot) => SESJE[sk].dni.filter(d => !(plan && slot && plan.dni && plan.dni[d + '|' + slot]));
+const potrzebnePorcje = (sk, plan, slot) => dniAktywne(plan, sk, slot).length * S.ustawienia.osoby;
 
 // Ile ugotować: dania do mrożenia robimy całymi partiami (nadwyżka → zamrażarka), resztę przeliczamy.
-function ileGotowac(p, sk) {
-  const need = potrzebnePorcje(sk);
+function ileGotowac(p, sk, plan, slot) {
+  const need = potrzebnePorcje(sk, plan, slot);
+  if (!need) return { mnoznik: 0, porcje: 0, nadwyzka: 0, need: 0 };
   if (p.mrozenie) {
     const partie = Math.ceil(need / p.porcje);
     return { mnoznik: partie, porcje: partie * p.porcje, nadwyzka: partie * p.porcje - need, need };
   }
   return { mnoznik: need / p.porcje, porcje: need, nadwyzka: 0, need };
 }
-function ileGotowacTekst(p, sk) {
-  const g = ileGotowac(p, sk);
+function ileGotowacTekst(p, sk, plan, slot) {
+  const g = ileGotowac(p, sk, plan, slot);
+  if (!g.need) return 'Nic do gotowania — wszystkie dni zmienione';
   const ile = Math.abs(g.mnoznik - 1) < 0.01 ? 'cały przepis' : `${ulamek(g.mnoznik)} przepisu`;
   if (g.nadwyzka > 0) return `Zrób ${ile} (${porcjiTekst(g.porcje)}): ${g.need} na plan, ${g.nadwyzka} do zamrażarki`;
   return `Zrób ${ile} (${porcjiTekst(g.porcje)})`;
@@ -290,7 +299,7 @@ function zarezerwowane(zid, plan) {
   for (const [sk, ses] of Object.entries(plan.sesje)) {
     for (const [slot, it] of Object.entries(ses)) {
       if (!it || it.typ !== 'zamrazarka' || it.zid !== zid || !aktywne.has(slot)) continue;
-      for (const d of SESJE[sk].dni) if (!(plan.wyjete || {})[d + '|' + slot]) n += S.ustawienia.osoby;
+      for (const d of dniAktywne(plan, sk, slot)) if (!(plan.wyjete || {})[d + '|' + slot]) n += S.ustawienia.osoby;
     }
   }
   return n;
@@ -341,19 +350,32 @@ function resetPozycji(plan, key) {
   delete plan.doZamrazarki[key];
 }
 
+// Co faktycznie jest danego dnia: zmiana na ten dzień albo danie z gotowania
+const pozycjaDnia = (plan, dzien, slot) => plan.dni[dzien + '|' + slot] || plan.sesje[DZIEN_SESJA[dzien]][slot];
+
 function infoPozycji(it) {
   if (!it) return null;
+  if (it.typ === 'pomin') return { nazwa: 'Pominięte', p: null, pomin: true };
+  if (it.typ === 'wlasne') return { nazwa: it.nazwa, p: null, wlasne: true };
   const p = it.przepisId ? PO_ID[it.przepisId] : null;
   return { nazwa: it.typ === 'zamrazarka' ? it.nazwa : (p ? p.nazwa : '?'), p, zamr: it.typ === 'zamrazarka' };
+}
+function opisKrotki(it) {
+  const inf = infoPozycji(it);
+  if (!inf) return '—';
+  if (inf.pomin) return '⏭ pominięte';
+  if (inf.wlasne) return '✍️ ' + inf.nazwa;
+  return (inf.zamr ? '🧊 ' : '') + inf.nazwa;
 }
 function metaPrzepisu(p) {
   if (!p) return '';
   return `💪 ~${p.bialko_g} g białka · ${p.kcal} kcal · ⏱ ${p.czas_min} min${p.mrozenie ? ' · ❄️ mrozi się' : ''}`;
 }
-function sumaDnia(ses) {
+// pobierz(slotId) → pozycja planu
+function sumaDnia(pobierz) {
   let b = 0, k = 0;
   for (const s of aktywneSloty()) {
-    const inf = infoPozycji(ses[s.id]);
+    const inf = infoPozycji(pobierz(s.id));
     if (inf && inf.p) { b += inf.p.bialko_g; k += inf.p.kcal; }
   }
   return { b, k };
@@ -367,7 +389,7 @@ function oznaczUgotowane(planKey, sk, slot, wartosc) {
   plan.ugotowane[key] = true;
   const p = PO_ID[plan.sesje[sk][slot].przepisId];
   const komunikaty = [];
-  const g = ileGotowac(p, sk);
+  const g = ileGotowac(p, sk, plan, slot);
   if (g.nadwyzka > 0 && !plan.doZamrazarki[key] && confirm(`Włożyć ${porcjiTekst(g.nadwyzka)} „${p.nazwa}” do zamrażarki?`)) {
     dodajDoZamrazarki({ nazwa: p.nazwa, przepisId: p.id, slot: p.slot, porcje: g.nadwyzka });
     plan.doZamrazarki[key] = true;
@@ -399,21 +421,24 @@ function kuchnTekst(jedn) {
   return Object.entries(jedn).filter(([, x]) => x > 0).map(([j, x]) => ileTekst(zaokraglij(x, j), j)).join(' + ');
 }
 
-function listaZakupow(plan, sk) {
-  const ses = plan.sesje[sk];
+// Lista zakupów na tydzień. sesje = które gotowania wziąć (domyślnie pn + śr razem).
+function listaZakupow(plan, sesje = ['pn', 'sr']) {
   const zbior = new Map();
-  for (const slot of aktywneSloty()) {
-    const it = ses[slot.id];
-    if (!it || it.typ !== 'przepis') continue;
-    const p = PO_ID[it.przepisId];
-    if (!p) continue;
-    const { mnoznik } = ileGotowac(p, sk);
-    for (const s of skladnikiPozycji(p, plan.zamiany[kluczPoz(sk, slot.id)])) {
-      const e = zbior.get(s.nazwa) || { nazwa: s.nazwa, kategoria: s.kategoria || KATALOG.get(s.nazwa) || 'Inne', jedn: {}, dla: new Set() };
-      const j = s.jednostka || '';
-      e.jedn[j] = (e.jedn[j] || 0) + (s.ilosc == null ? 0 : s.ilosc * mnoznik);
-      e.dla.add(p.nazwa);
-      zbior.set(s.nazwa, e);
+  for (const sk of sesje) {
+    for (const slot of aktywneSloty()) {
+      const it = plan.sesje[sk][slot.id];
+      if (!it || it.typ !== 'przepis') continue;
+      const p = PO_ID[it.przepisId];
+      if (!p) continue;
+      const { mnoznik } = ileGotowac(p, sk, plan, slot.id);
+      if (!mnoznik) continue;
+      for (const s of skladnikiPozycji(p, plan.zamiany[kluczPoz(sk, slot.id)])) {
+        const e = zbior.get(s.nazwa) || { nazwa: s.nazwa, kategoria: s.kategoria || KATALOG.get(s.nazwa) || 'Inne', jedn: {}, dla: new Set() };
+        const j = s.jednostka || '';
+        e.jedn[j] = (e.jedn[j] || 0) + (s.ilosc == null ? 0 : s.ilosc * mnoznik);
+        e.dla.add(`${p.nazwa} (${DNI_KROTKO[sk]})`);
+        zbior.set(s.nazwa, e);
+      }
     }
   }
   const kupic = [], sprawdz = [], pominiete = [];
@@ -426,7 +451,7 @@ function listaZakupow(plan, sk) {
     else { e.ile = kupTekst(e.nazwa, e.jedn); kupic.push(e); }
   }
   const konczy = S.produkty.filter(p => p.konczySie).map(p => ({ key: 'kon|' + p.nazwa, nazwa: p.nazwa, kategoria: kategoriaProduktu(p), ile: '', dla: new Set() }));
-  const wlasne = (plan.wlasne[sk] || []).map(w => ({ key: 'wl|' + w.id, nazwa: w.nazwa, kategoria: 'Własne', ile: '', dla: new Set(), wlasneId: w.id }));
+  const wlasne = (plan.wlasne.all || []).map(w => ({ key: 'wl|' + w.id, nazwa: w.nazwa, kategoria: 'Własne', ile: '', dla: new Set(), wlasneId: w.id }));
   return { kupic, sprawdz, pominiete, konczy, wlasne };
 }
 
@@ -446,39 +471,34 @@ function render() {
   document.querySelectorAll('.dol a').forEach(a => a.classList.toggle('aktywny', a.dataset.widok === zakl));
 }
 
-const ctxAttr = (planKey, sk, slot) => `data-plan="${planKey}" data-sk="${sk}" data-slot="${slot}"`;
+const ctxAttr = (planKey, sk, slot, dzien) => `data-plan="${planKey}" data-sk="${sk}" data-slot="${slot}"${dzien ? ` data-dzien="${dzien}"` : ''}`;
 
+// Jeden wiersz z daniem. opcje: planKey, sk, dzien, zamiany, dodatki (HTML pod nazwą), menu (true = przycisk ⋯)
 function wierszDania(slot, it, opcje = {}) {
   const inf = infoPozycji(it);
-  if (!inf) return `<div class="danie"><div class="danie-slot"><b>${slot.nazwa}</b>${slot.pora}</div><div class="danie-tresc maly">brak przepisu</div></div>`;
-  const ctx = opcje.planKey ? ' ' + ctxAttr(opcje.planKey, opcje.sk, slot.id) : '';
-  const nazwa = inf.p
-    ? `<button class="link" data-a="przepis" data-id="${inf.p.id}"${inf.zamr ? '' : ctx}>${esc(inf.nazwa)}</button>`
-    : `<b>${esc(inf.nazwa)}</b>`;
-  return `<div class="danie">
+  const kropki = opcje.menu ? `<button class="kropki" data-a="menu" ${ctxAttr(opcje.planKey, opcje.sk, slot.id, opcje.dzien)} aria-label="Więcej opcji">⋯</button>` : '';
+  let tresc;
+  if (!inf) tresc = '<span class="maly">brak dania</span>';
+  else if (inf.pomin) tresc = '<span class="maly">⏭ Pominięte</span>';
+  else if (inf.wlasne) tresc = `<b>✍️ ${esc(inf.nazwa)}</b><div class="meta">własne</div>`;
+  else {
+    const ctx = opcje.planKey && !inf.zamr ? ' ' + ctxAttr(opcje.planKey, opcje.sk, slot.id) : '';
+    tresc = (inf.p ? `<button class="link" data-a="przepis" data-id="${inf.p.id}"${ctx}>${esc(inf.nazwa)}</button>` : `<b>${esc(inf.nazwa)}</b>`)
+      + (inf.zamr ? '<span class="znaczek">🧊 z zamrażarki</span>' : opisZamian(opcje.zamiany))
+      + `<div class="meta">${metaPrzepisu(inf.p)}</div>`;
+  }
+  return `<div class="danie${inf && inf.pomin ? ' pominiety' : ''}">
     <div class="danie-slot"><b>${slot.nazwa}</b>${slot.pora}</div>
-    <div class="danie-tresc">${nazwa}${inf.zamr ? '<span class="znaczek">🧊 z zamrażarki</span>' : ''}
-      ${inf.zamr ? '' : opisZamian(opcje.zamiany)}
-      <div class="meta">${metaPrzepisu(inf.p)}</div>${opcje.dodatki || ''}</div>
+    <div class="danie-tresc">${tresc}${opcje.dodatki || ''}</div>${kropki}
   </div>`;
 }
 
-// Przyciski pod daniem. pelne = w zakładce Plan (losuj, wybierz, składniki).
-function akcjePozycji(planKey, plan, sk, slot, pelne) {
+// Przycisk „Ugotowane” — tylko dla dania z przepisu, które gotujesz w tej sesji
+function przyciskUgotowane(planKey, plan, sk, slot) {
   const it = plan.sesje[sk][slot];
-  const key = kluczPoz(sk, slot);
-  const d = ctxAttr(planKey, sk, slot);
-  let h = '<div class="akcje">';
-  if (it && it.typ === 'przepis') {
-    const ug = !!plan.ugotowane[key];
-    h += `<label class="btn ${ug ? 'wl' : ''}"><input type="checkbox" data-c="ugot" ${d} ${ug ? 'checked' : ''} hidden>${ug ? '✓ Ugotowane' : '☐ Ugotowane'}</label>`;
-    if (!ug) h += `<button class="btn zimny" data-a="wybierzZamr" ${d}>🧊 Z zamrażarki</button>`;
-  }
-  if (pelne) {
-    h += `<button class="btn" data-a="losuj" ${d}>🎲 Inny</button><button class="btn" data-a="wybierzPrzepis" ${d}>📖 Wybierz</button>`;
-    if (it && it.typ === 'przepis') h += `<button class="btn" data-a="przepis" data-id="${it.przepisId}" ${d}>⇄ Składniki</button>`;
-  }
-  return h + '</div>';
+  if (!it || it.typ !== 'przepis') return '';
+  const ug = !!plan.ugotowane[kluczPoz(sk, slot)];
+  return `<div class="akcje"><label class="btn ${ug ? 'wl' : ''}"><input type="checkbox" data-c="ugot" ${ctxAttr(planKey, sk, slot)} ${ug ? 'checked' : ''} hidden>${ug ? '✓ Ugotowane' : '☐ Ugotowane'}</label></div>`;
 }
 
 function widokStart() {
@@ -495,14 +515,18 @@ function widokStart() {
     const planKey = isoData(pon);
     const plan = planTygodnia(pon);
     const sk = DZIEN_SESJA[jd];
-    const ses = plan.sesje[sk];
     h += `<div class="karta">`;
     for (const slot of aktywneSloty()) {
-      const it = ses[slot.id];
-      h += wierszDania(slot, it, { planKey, sk, zamiany: plan.zamiany[kluczPoz(sk, slot.id)], dodatki: akcjePozycji(planKey, plan, sk, slot.id, false) });
+      const it = pozycjaDnia(plan, jd, slot.id);
+      const nadpisane = !!plan.dni[jd + '|' + slot.id];
+      h += wierszDania(slot, it, {
+        planKey, sk, dzien: jd, menu: true,
+        zamiany: plan.zamiany[kluczPoz(sk, slot.id)],
+        dodatki: nadpisane ? '' : przyciskUgotowane(planKey, plan, sk, slot.id),
+      });
       if (it && it.typ === 'zamrazarka') doWyjecia.push({ it, klucz: jd + '|' + slot.id, planKey });
     }
-    const suma = sumaDnia(ses);
+    const suma = sumaDnia(slot => pozycjaDnia(plan, jd, slot));
     h += `<p class="maly" style="margin:8px 0 0">Razem: ~${suma.b} g białka · ~${suma.k} kcal${S.ustawienia.post ? ' · post: pierwszy posiłek ok. 10:00' : ''}</p></div>`;
   }
 
@@ -530,11 +554,21 @@ function widokStart() {
     const ses = plan.sesje[dd];
     h += `<h2>Dziś: ${SESJE[dd].opis}</h2><div class="karta">`;
     for (const slot of aktywneSloty()) {
-      h += wierszDania(slot, ses[slot.id], { planKey, sk: dd, zamiany: plan.zamiany[kluczPoz(dd, slot.id)], dodatki: akcjePozycji(planKey, plan, dd, slot.id, false) });
+      h += wierszDania(slot, ses[slot.id], {
+        planKey, sk: dd, menu: true, zamiany: plan.zamiany[kluczPoz(dd, slot.id)],
+        dodatki: przyciskUgotowane(planKey, plan, dd, slot.id) + nadpisaniaDni(planKey, plan, dd, slot.id),
+      });
     }
-    h += `<div class="akcje" style="margin-top:12px"><a class="btn" href="#plan">✏️ Zmień w planie</a>${SESJE[dd].zakupy ? `<button class="btn glowny" data-a="idzZakupy" data-sk="${dd}">🛒 Lista zakupów</button>` : ''}</div></div>`;
+    h += `<div class="akcje" style="margin-top:12px">${SESJE[dd].zakupy ? `<button class="btn glowny" data-a="idzZakupy" data-sk="${dd}">🛒 Lista zakupów</button>` : ''}</div></div>`;
   }
   return h;
+}
+
+// Zmiany na pojedyncze dni (np. „pt: ✍️ resztki”) pokazane pod daniem z gotowania
+function nadpisaniaDni(planKey, plan, sk, slot) {
+  return SESJE[sk].dni.filter(d => plan.dni[d + '|' + slot]).map(d =>
+    `<div class="meta nadpisanie">${DNI_KROTKO[d]}: ${esc(opisKrotki(plan.dni[d + '|' + slot]))}
+      <button class="btn maly-btn" data-a="przywrocDzien" ${ctxAttr(planKey, sk, slot, d)}>↺ przywróć</button></div>`).join('');
 }
 
 function widokPlan() {
@@ -557,15 +591,15 @@ function widokPlan() {
       const inf = infoPozycji(it);
       const key = kluczPoz(sk, slot.id);
       let dodatki = '';
-      if (inf && !inf.zamr && inf.p) {
-        const g = ileGotowac(inf.p, sk);
-        dodatki += `<div class="meta">${ileGotowacTekst(inf.p, sk)}${g.nadwyzka > 0 && plan.doZamrazarki[key] ? ' · ✓ nadwyżka w zamrażarce' : ''}</div>`;
+      if (inf && inf.p && !inf.zamr) {
+        const g = ileGotowac(inf.p, sk, plan, slot.id);
+        dodatki += `<div class="meta">${ileGotowacTekst(inf.p, sk, plan, slot.id)}${g.nadwyzka > 0 && plan.doZamrazarki[key] ? ' · ✓ nadwyżka w zamrażarce' : ''}</div>`;
       }
       if (inf && inf.zamr) dodatki += `<div class="meta">Wyjmij wieczorem przed każdym dniem (${porcjiTekst(S.ustawienia.osoby)} na dzień).</div>`;
-      dodatki += akcjePozycji(k, plan, sk, slot.id, true);
-      h += wierszDania(slot, it, { planKey: k, sk, zamiany: plan.zamiany[key], dodatki });
+      dodatki += przyciskUgotowane(k, plan, sk, slot.id) + nadpisaniaDni(k, plan, sk, slot.id);
+      h += wierszDania(slot, it, { planKey: k, sk, menu: true, zamiany: plan.zamiany[key], dodatki });
     }
-    const suma = sumaDnia(ses);
+    const suma = sumaDnia(slot => ses[slot]);
     h += `<p class="maly" style="margin:8px 0 0">Na dzień: ~${suma.b} g białka · ~${suma.k} kcal</p></div>`;
   }
   h += `<button class="btn szeroki" data-a="nowyPlan" data-plan="${k}">🎲 Wylosuj cały tydzień od nowa</button>
@@ -584,24 +618,29 @@ function wierszZakupu(e, zazn, d, opcje = {}) {
   </label>`;
 }
 
+// Od czwartku zakupy z tego tygodnia są już za Tobą → domyślnie pokazujemy następny tydzień
+const domyslnyTydzienZakupow = () => ([4, 5].includes(dzis().getDay()) ? 1 : 0);
+
 function widokZakupy() {
-  const d = dzis();
-  const pon = poniedzialekPlanu(d);
+  if (ui.zakupyTydzien == null) ui.zakupyTydzien = domyslnyTydzienZakupow();
+  const pon0 = poniedzialekPlanu(dzis());
+  const pon = dodajDni(pon0, ui.zakupyTydzien * 7);
   const plan = planTygodnia(pon);
   const k = isoData(pon);
-  if (!ui.zakupySesja) ui.zakupySesja = [2, 3].includes(d.getDay()) ? 'sr' : 'pn';
-  const sk = ui.zakupySesja;
-  const L = listaZakupow(plan, sk);
-  const zazn = plan.zakupy[sk] || {};
-  const attr = `data-plan="${k}" data-sk="${sk}"`;
+  const f = ui.zakupyFiltr;
+  const L = listaZakupow(plan, f === 'all' ? ['pn', 'sr'] : [f]);
+  const zazn = plan.zakupy.all;
+  const attr = `data-plan="${k}"`;
   const doKupienia = [...L.konczy, ...L.kupic, ...L.wlasne, ...L.sprawdz];
   const kupione = doKupienia.filter(p => zazn[p.key]).length;
+  const chip = (v, t) => `<button class="btn ${f === v ? 'wl' : ''}" data-a="zakupyFiltr" data-v="${v}">${t}</button>`;
 
   let h = `<h1>Lista zakupów</h1>
     <div class="segment">
-      <button class="${sk === 'pn' ? 'wl' : ''}" data-a="zakupySesja" data-v="pn">Poniedziałek ${krotkaData(dataDnia(pon, 'pn'))}</button>
-      <button class="${sk === 'sr' ? 'wl' : ''}" data-a="zakupySesja" data-v="sr">Środa ${krotkaData(dataDnia(pon, 'sr'))}</button>
+      <button class="${ui.zakupyTydzien === 0 ? 'wl' : ''}" data-a="zakupyTydzien" data-v="0">Ten tydzień ${krotkaData(pon0)}–${krotkaData(dodajDni(pon0, 4))}</button>
+      <button class="${ui.zakupyTydzien === 1 ? 'wl' : ''}" data-a="zakupyTydzien" data-v="1">Następny ${krotkaData(dodajDni(pon0, 7))}–${krotkaData(dodajDni(pon0, 11))}</button>
     </div>
+    <div class="chipy">${chip('all', '🛒 Cały tydzień')}${chip('pn', `Tylko pn ${krotkaData(dataDnia(pon, 'pn'))} (na wt–śr)`)}${chip('sr', `Tylko śr ${krotkaData(dataDnia(pon, 'sr'))} (na czw–pt)`)}</div>
     <p class="podtytul">${kupione} / ${doKupienia.length} w koszyku · porcje dla ${S.ustawienia.osoby} os.</p>`;
 
   if (L.konczy.length) {
@@ -802,7 +841,7 @@ function modalPrzepis(id, ctx) {
   const o = S.oceny[id] || {};
   const key = ctx ? kluczPoz(ctx.sk, ctx.slot) : null;
   const zam = ctx ? plan.zamiany[key] || {} : {};
-  const g = ctx ? ileGotowac(p, ctx.sk) : null;
+  const g = ctx ? ileGotowac(p, ctx.sk, plan, ctx.slot) : null;
   const skaluj = g && !ctx.cale && Math.abs(g.mnoznik - 1) > 0.01;
   const m = skaluj ? g.mnoznik : 1;
   const d = ctx ? ctxAttr(ctx.planKey, ctx.sk, ctx.slot) : '';
@@ -875,30 +914,80 @@ function modalZamiana(ctx, orig) {
     </div>`);
 }
 
-function modalWyborZamr(planKey, sk, slot) {
+function modalWyborZamr(planKey, sk, slot, dzien) {
   const plan = S.plany[planKey];
-  const need = potrzebnePorcje(sk);
+  // jeśli wybierasz z karty „jutro”, a jutro było zmienione — ten dzień wraca do planu, więc liczymy go też
+  const wraca = dzien && plan.dni[dzien + '|' + slot] ? 1 : 0;
+  const need = (dniAktywne(plan, sk, slot).length + wraca) * S.ustawienia.osoby || S.ustawienia.osoby;
   const it = plan.sesje[sk][slot];
   const lista = S.zamrazarka.filter(z => wolnePorcje(z, plan) >= need && !(it && it.zid === z.id))
     .sort((a, b) => (a.slot === slot ? 0 : 1) - (b.slot === slot ? 0 : 1));
   otworzModal(`<h2>🧊 Nie chce mi się gotować</h2>
     <p class="maly">${SLOT_NAZWA[slot]} na: ${SESJE[sk].dni.map(d => DNI_NAZWY[d]).join(' + ')} — potrzeba ${porcjiTekst(need)}.</p>
     <div class="karta">${lista.map(z => `<div class="wiersz"><div class="rozciag"><b>${esc(z.nazwa)}</b><div class="meta">${SLOT_NAZWA[z.slot]} · wolne: ${wolnePorcje(z, plan)} porc.</div></div>
-      <button class="btn zimny" data-a="ustawZamr" ${ctxAttr(planKey, sk, slot)} data-zid="${z.id}">Wybierz</button></div>`).join('')
+      <button class="btn zimny" data-a="ustawZamr" ${ctxAttr(planKey, sk, slot, dzien)} data-zid="${z.id}">Wybierz</button></div>`).join('')
       || `<p class="pusto">W zamrażarce nie ma dania z ${porcjiTekst(need)}.<br>Gdy ugotujesz coś, co się mrozi (❄️), odhacz „Ugotowane” — nadwyżka trafi do zamrażarki. Możesz też dodać ręcznie w Produkty → Zamrażarka.</p>`}</div>`);
 }
 
-function modalWybierzPrzepis(planKey, sk, slot) {
+function modalWybierzPrzepis(planKey, sk, slot, dzien) {
   const plan = S.plany[planKey];
   const it = plan.sesje[sk][slot];
   const lista = PRZEPISY.filter(p => p.slot === slot && ocena(p.id) !== -1).sort((a, b) => ocena(b.id) - ocena(a.id) || a.nazwa.localeCompare(b.nazwa, 'pl'));
   const wPlanie = idsWPlanie(plan);
   otworzModal(`<h2>📖 Wybierz: ${SLOT_NAZWA[slot]}</h2>
     <p class="maly">${SESJE[sk].nazwa} → na ${SESJE[sk].dni.map(d => DNI_KROTKO[d]).join('–')}</p>
-    ${lista.map(p => `<button class="karta przepis-karta" data-a="ustawPrzepis" ${ctxAttr(planKey, sk, slot)} data-id="${p.id}">
+    ${lista.map(p => `<button class="karta przepis-karta" data-a="ustawPrzepis" ${ctxAttr(planKey, sk, slot, dzien)} data-id="${p.id}">
       <b>${esc(p.nazwa)}</b> ${ocena(p.id) === 1 ? '👍' : ''}${it && it.przepisId === p.id ? ' <span class="znaczek ok">teraz</span>' : wPlanie.has(p.id) ? ' <span class="znaczek">już w tym tygodniu</span>' : ''}
       <div class="meta">${p.tagi.bialko.join(', ')} · ${p.tagi.kuchnia}</div>
       <div class="meta">${metaPrzepisu(p)}</div></button>`).join('')}`);
+}
+
+// Menu ⋯ przy daniu. dzien = otwarte z karty „jutro” (wtedy ten dzień pokazujemy jako pierwszy)
+function modalMenu(c) {
+  const plan = S.plany[c.planKey];
+  const ses = SESJE[c.sk];
+  const it = plan.sesje[c.sk][c.slot];
+  const inf = infoPozycji(it);
+  const dniTxt = ses.dni.map(d => DNI_KROTKO[d]).join('–');
+  const nadp = c.dzien && plan.dni[c.dzien + '|' + c.slot];
+  const attr = ctxAttr(c.planKey, c.sk, c.slot, c.dzien);
+  const btn = (a, tekst, extra = '') => `<button class="menu-btn" data-a="${a}" ${attr} ${extra}>${tekst}</button>`;
+  const dniKolejno = c.dzien ? [c.dzien, ...ses.dni.filter(d => d !== c.dzien)] : ses.dni;
+  const zakresy = (a, ikona, tekst) => ses.dni.length === 1
+    ? btn(a, `${ikona} ${tekst}`, 'data-zakres="wszystkie"')
+    : dniKolejno.map(d => btn(a, `${ikona} ${tekst} — tylko ${DNI_NAZWY[d]}`, `data-zakres="${d}"`)).join('') + btn(a, `${ikona} ${tekst} — ${dniTxt}`, 'data-zakres="wszystkie"');
+
+  let h = `<h2>${SLOT_NAZWA[c.slot]} · ${c.dzien ? DNI_NAZWY[c.dzien] : 'na ' + dniTxt}</h2>
+    <p class="maly">Teraz: ${esc(opisKrotki(nadp || it))}</p>`;
+  if (nadp) h += `<div class="menu">${btn('przywrocDzien', `↺ Przywróć: ${esc(opisKrotki(it))}`)}</div>`;
+  h += `<h3>Zmień danie <span class="maly">(gotowanie na ${dniTxt})</span></h3><div class="menu">
+    ${btn('wybierzPrzepis', '📖 Wybierz z przepisów')}
+    ${btn('losuj', '🎲 Wylosuj inne')}
+    ${btn('wybierzZamr', '🧊 Z zamrażarki — nie chce mi się gotować')}
+    ${inf && inf.p && !inf.zamr ? btn('przepis', '📄 Przepis i ⇄ zmiana składników', `data-id="${inf.p.id}"`) : ''}
+  </div>
+  <h3>Coś innego</h3><div class="menu">
+    ${btn('wlasneModal', '✍️ Coś własnego / resztki')}
+    ${zakresy('pomin', '⏭', 'Pomiń')}
+  </div>`;
+  otworzModal(h);
+}
+
+function modalWlasne(c) {
+  const ses = SESJE[c.sk];
+  const dniKolejno = c.dzien ? [c.dzien, ...ses.dni.filter(d => d !== c.dzien)] : ses.dni;
+  const dniTxt = ses.dni.map(d => DNI_KROTKO[d]).join('–');
+  const szybkie = ['Resztki z obiadu', 'Kanapki', 'Coś kupionego', 'Jogurt i owoce', 'Jajka na twardo'];
+  const przyciski = ses.dni.length === 1
+    ? `<button class="btn glowny szeroki" name="zakres" value="wszystkie">Zapisz</button>`
+    : dniKolejno.map(d => `<button class="btn glowny szeroki" name="zakres" value="${d}" style="margin-top:8px">Tylko ${DNI_NAZWY[d]}</button>`).join('')
+      + `<button class="btn szeroki" name="zakres" value="wszystkie" style="margin-top:8px">Oba dni (${dniTxt})</button>`;
+  otworzModal(`<h2>✍️ Coś własnego</h2>
+    <form data-f="wlasneDanie" ${ctxAttr(c.planKey, c.sk, c.slot, c.dzien)}>
+      <input type="text" name="nazwa" id="wl-nazwa" placeholder="np. resztki makaronu z obiadu" autocomplete="off">
+      <div class="akcje">${szybkie.map(s => `<button type="button" class="btn maly-btn" data-a="wpisz" data-v="${s}">${s}</button>`).join('')}</div>
+      <div style="margin-top:12px">${przyciski}</div>
+    </form>`);
 }
 
 function modalDoZamr(id) {
@@ -959,7 +1048,22 @@ function eksportDlaClaude() {
 
 // ---------- Akcje (kliknięcia) ----------
 const planDo = el => S.plany[el.dataset.plan];
-const ctxZ = el => ({ planKey: el.dataset.plan, sk: el.dataset.sk, slot: el.dataset.slot });
+const ctxZ = el => ({ planKey: el.dataset.plan, sk: el.dataset.sk, slot: el.dataset.slot, dzien: el.dataset.dzien });
+
+// Zmiana danie na jeden dzień (zakres = 'cz') albo na całe gotowanie (zakres = 'wszystkie')
+function ustawWZakresie(c, zakres, item) {
+  const plan = S.plany[c.planKey];
+  if (zakres === 'wszystkie') {
+    plan.sesje[c.sk][c.slot] = item;
+    resetPozycji(plan, kluczPoz(c.sk, c.slot));
+    for (const d of SESJE[c.sk].dni) delete plan.dni[d + '|' + c.slot];
+  } else {
+    plan.dni[zakres + '|' + c.slot] = item;
+  }
+  zapisz(); zamknijModal(); render();
+}
+// Gdy zmieniasz danie gotowania z karty „jutro”, ten dzień wraca do wspólnego dania
+const wyczyscDzien = el => { if (el.dataset.dzien) delete planDo(el).dni[el.dataset.dzien + '|' + el.dataset.slot]; };
 
 function ustawZamiane(el, z) {
   const ctx = ctxZ(el);
@@ -984,23 +1088,32 @@ const AKCJE = {
     const p = wybierzPrzepis(slot, wyklucz, ostatnioUzyte(zIso(el.dataset.plan)), { szybkie: sk === 'nd' });
     if (p) plan.sesje[sk][slot] = { typ: 'przepis', przepisId: p.id };
     resetPozycji(plan, kluczPoz(sk, slot));
-    zapisz(); render();
+    wyczyscDzien(el);
+    zapisz(); zamknijModal(); render();
+    if (p) toast('🎲 ' + p.nazwa);
   },
-  wybierzPrzepis: el => modalWybierzPrzepis(el.dataset.plan, el.dataset.sk, el.dataset.slot),
+  wybierzPrzepis: el => modalWybierzPrzepis(el.dataset.plan, el.dataset.sk, el.dataset.slot, el.dataset.dzien),
   ustawPrzepis: el => {
     const plan = planDo(el), { sk, slot } = el.dataset;
     plan.sesje[sk][slot] = { typ: 'przepis', przepisId: el.dataset.id };
     resetPozycji(plan, kluczPoz(sk, slot));
+    wyczyscDzien(el);
     zapisz(); zamknijModal(); render();
   },
-  wybierzZamr: el => modalWyborZamr(el.dataset.plan, el.dataset.sk, el.dataset.slot),
+  wybierzZamr: el => modalWyborZamr(el.dataset.plan, el.dataset.sk, el.dataset.slot, el.dataset.dzien),
   ustawZamr: el => {
     const plan = planDo(el), z = S.zamrazarka.find(x => x.id === el.dataset.zid);
     if (!z) return;
     plan.sesje[el.dataset.sk][el.dataset.slot] = pozycjaZZamrazarki(z);
     resetPozycji(plan, kluczPoz(el.dataset.sk, el.dataset.slot));
+    wyczyscDzien(el);
     zapisz(); zamknijModal(); render(); toast('🧊 Zamienione — pamiętaj wyjąć wieczorem');
   },
+  menu: el => modalMenu(ctxZ(el)),
+  wlasneModal: el => modalWlasne(ctxZ(el)),
+  wpisz: el => { const i = document.getElementById('wl-nazwa'); i.value = el.dataset.v; i.focus(); },
+  pomin: el => { ustawWZakresie(ctxZ(el), el.dataset.zakres, { typ: 'pomin' }); toast('⏭ Pominięte'); },
+  przywrocDzien: el => { delete planDo(el).dni[el.dataset.dzien + '|' + el.dataset.slot]; zapisz(); zamknijModal(); render(); },
   zamianaModal: el => modalZamiana(ctxZ(el), el.dataset.n),
   zamien: el => {
     const plan = planDo(el);
@@ -1022,30 +1135,32 @@ const AKCJE = {
     zmienPorcje(el.dataset.zid, -S.ustawienia.osoby);
     zapisz(); render(); toast('Wyjęte — smacznego jutro!');
   },
-  idzZakupy: el => { ui.zakupySesja = el.dataset.sk; location.hash = '#zakupy'; },
-  zakupySesja: el => { ui.zakupySesja = el.dataset.v; render(); },
-  odznacz: el => { planDo(el).zakupy[el.dataset.sk] = {}; zapisz(); render(); },
+  // W poniedziałek: lista na cały tydzień; w środę: tylko dokupienie na czw–pt
+  idzZakupy: el => { ui.zakupyTydzien = 0; ui.zakupyFiltr = el.dataset.sk === 'sr' ? 'sr' : 'all'; location.hash = '#zakupy'; },
+  zakupyTydzien: el => { ui.zakupyTydzien = +el.dataset.v; render(); },
+  zakupyFiltr: el => { ui.zakupyFiltr = el.dataset.v; render(); },
+  odznacz: el => { planDo(el).zakupy.all = {}; zapisz(); render(); },
   koniecZakupow: el => {
-    const plan = planDo(el), sk = el.dataset.sk;
-    const zazn = plan.zakupy[sk] || {};
+    const plan = planDo(el);
+    const zazn = plan.zakupy.all;
     let n = 0;
     for (const key of Object.keys(zazn)) {
       const [typ, reszta] = [key.slice(0, key.indexOf('|')), key.slice(key.indexOf('|') + 1)];
       if (typ === 'k' || typ === 'kon') { dodajProdukt(reszta); n++; }
       else if (typ === 'wl') {
-        const w = (plan.wlasne[sk] || []).find(x => x.id === reszta);
+        const w = plan.wlasne.all.find(x => x.id === reszta);
         if (w) { dodajProdukt(w.nazwa); n++; }
-        plan.wlasne[sk] = (plan.wlasne[sk] || []).filter(x => x.id !== reszta);
+        plan.wlasne.all = plan.wlasne.all.filter(x => x.id !== reszta);
       }
     }
-    plan.zakupy[sk] = {};
+    plan.zakupy.all = {};
     zapisz(); render(); toast(`🏠 Dodano do Produktów: ${n}`);
   },
   mam: (el, e) => { e.preventDefault(); dodajProdukt(el.dataset.n); zapisz(); render(); toast(`🏠 ${el.dataset.n} — w Produktach`); },
   usunWlasne: (el, e) => {
     e.preventDefault();
     const plan = planDo(el);
-    plan.wlasne[el.dataset.sk] = plan.wlasne[el.dataset.sk].filter(w => w.id !== el.dataset.id);
+    plan.wlasne.all = plan.wlasne.all.filter(w => w.id !== el.dataset.id);
     zapisz(); render();
   },
   produktySeg: el => { ui.produktySeg = el.dataset.v; if (location.hash === '#zamrazarka') location.hash = '#produkty'; else render(); },
@@ -1093,7 +1208,7 @@ document.addEventListener('change', e => {
   const c = el.dataset.c;
   if (c === 'kup') {
     const plan = planDo(el);
-    const z = plan.zakupy[el.dataset.sk] || (plan.zakupy[el.dataset.sk] = {});
+    const z = plan.zakupy.all;
     if (el.checked) z[el.dataset.key] = true; else delete z[el.dataset.key];
     zapisz(); render();
   } else if (c === 'ugot') {
@@ -1135,9 +1250,14 @@ document.addEventListener('submit', e => {
   if (rodzaj === 'dodajWlasne') {
     const nazwa = (dane.nazwa || '').trim();
     if (!nazwa) return;
-    const plan = S.plany[f.dataset.plan];
-    (plan.wlasne[f.dataset.sk] || (plan.wlasne[f.dataset.sk] = [])).push({ id: nowyId(), nazwa });
+    S.plany[f.dataset.plan].wlasne.all.push({ id: nowyId(), nazwa });
     zapisz(); render();
+  } else if (rodzaj === 'wlasneDanie') {
+    const nazwa = (dane.nazwa || '').trim();
+    if (!nazwa) { toast('Wpisz, co będzie'); return; }
+    const zakres = (e.submitter && e.submitter.value) || 'wszystkie';
+    ustawWZakresie(ctxZ(f), zakres, { typ: 'wlasne', nazwa });
+    toast('✍️ ' + nazwa);
   } else if (rodzaj === 'dodajProdukty') {
     const nazwy = String(dane.nazwy || '').split(/[,;\n]+/).map(normNazwa).filter(Boolean);
     if (!nazwy.length) return;
